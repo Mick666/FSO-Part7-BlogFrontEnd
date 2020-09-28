@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import { setNotification } from './reducers/notificationReducer'
+import { initializeBlogs, createBlog } from './reducers/blogReducer'
 import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
@@ -12,7 +13,8 @@ import { useDispatch, useSelector } from 'react-redux'
 const App = () => {
     const dispatch = useDispatch()
     const notification = useSelector(state => state.notification)
-    const [blogs, setBlogs] = useState([])
+    const blogs = useSelector(state => state.blogs)
+    // const [blogs, setBlogs] = useState([])
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [user, setUser] = useState(null)
@@ -62,23 +64,27 @@ const App = () => {
 
     const addBlog = (blogObject) => {
         blogFormRef.current.toggleVisibility()
+        dispatch(createBlog(blogObject))
+        const notificationMessage = `New blog ${blogObject.title} by ${blogObject.author} added`
+        dispatch(setNotification(notificationMessage, 'green', 5))
 
-        blogService
-            .create(blogObject)
-            .then(returnedBlog => {
-                setBlogs(blogs.concat(returnedBlog))
-                setUser(user)
-                const notificationMessage = `New blog ${blogObject.title} by ${blogObject.author} added`
-                dispatch(setNotification(notificationMessage, 'green', 5))
-            })
+        // blogService
+        //     .create(blogObject)
+        //     .then(returnedBlog => {
+        //         dispatch(addBlog(retu))
+        //         setBlogs(blogs.concat(returnedBlog))
+        //         setUser(user)
+        //         const notificationMessage = `New blog ${blogObject.title} by ${blogObject.author} added`
+        //         dispatch(setNotification(notificationMessage, 'green', 5))
+        //     })
     }
 
     const removePost = (event) => {
         console.log(event.target.dataset.id)
-        blogService
-            .deletePost(event.target.dataset.id)
-            .then(setBlogs(blogs.filter(blog => blog.id !== event.target.dataset.id)))
-            .catch(error => console.log(error))
+        // blogService
+        //     .deletePost(event.target.dataset.id)
+        //     .then(setBlogs(blogs.filter(blog => blog.id !== event.target.dataset.id)))
+        //     .catch(error => console.log(error))
     }
 
 
@@ -110,11 +116,8 @@ const App = () => {
     }
 
     useEffect(() => {
-        blogService.getAll().then(blogs => {
-            console.log(blogs)
-            setBlogs( blogs)
-        })
-    }, [])
+        dispatch(initializeBlogs())
+    }, [dispatch])
 
     return (
         <div>
