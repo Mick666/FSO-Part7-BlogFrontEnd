@@ -34,7 +34,6 @@ const BlogTogglable = (props) => {
 }
 
 const Blog = ({ blog, user, removePost, increaseLikes }) => {
-    const [likes, setLikes] = useState(blog.likes)
 
     return (
         <div className='blogStyle'>
@@ -42,7 +41,7 @@ const Blog = ({ blog, user, removePost, increaseLikes }) => {
                 <div>
                     Url: {blog.url}
                     <br />
-                    Likes: {likes}  <button onClick={() => increaseLikes(setLikes, blog)}>Like</button>
+                    Likes: {blog.likes}  <button onClick={() => increaseLikes(blog)}>Like</button>
                     <br />
                     Author: {blog.author}
                     <br />
