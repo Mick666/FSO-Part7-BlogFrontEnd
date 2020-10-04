@@ -1,7 +1,13 @@
 import React, { useEffect } from 'react'
+import {
+    BrowserRouter as Router,
+    Switch, Route, Link
+} from 'react-router-dom'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
+import { User, Users } from './components/Users'
 import { initializeBlogs, createBlog, addLike, removeBlog } from './reducers/blogReducer'
+import { initializeUsers } from './reducers/blogUsersReducer'
 import { loginUser, logout, setLogin } from './reducers/userReducer'
 import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
@@ -13,6 +19,7 @@ const App = () => {
     const notification = useSelector(state => state.notification)
     const blogs = useSelector(state => state.blogs)
     const user = useSelector(state => state.user)
+    const users = useSelector(state => state.users)
 
 
     const blogFormRef = React.createRef()
@@ -40,7 +47,6 @@ const App = () => {
     }
 
     const removePost = (event) => {
-        console.log(event.target.dataset.id)
         dispatch(removeBlog(event.target.dataset.id))
     }
 
@@ -71,34 +77,60 @@ const App = () => {
 
     useEffect(() => {
         dispatch(initializeBlogs())
+        dispatch(initializeUsers())
     }, [dispatch])
 
     return (
-        <div>
-            <Notification message={notification}/>
-            {user === null ?
-                <div>
-                    <h2>Please log in</h2>
-                    {loginForm()}
-                </div>:
-                <div>
-                    <h2>Blogs</h2>
-                    {`${user.username} logged in`} <button onClick={handleLogOut}>Log you out</button>
-                    <br></br>
-                    <h2>Create new blog</h2>
-                    {blogForm()}
-                    <br></br>
-                    {blogs.map(blog =>
-                        <Blog
-                            key={blog.id}
-                            blog={blog}
-                            user={user}
-                            removePost={removePost}
-                            increaseLikes={increaseLikes}/>
-                    )}
-                </div>
-            }
-        </div>
+        <Router>
+            <div>
+                {user === null ?
+                    <div>
+                        <h2>Please log in</h2>
+                        {loginForm()}
+                    </div> :
+                    <div>
+                        <div>
+                            <Link to='/'>Home</Link>
+                            <Link to='/users'>Users</Link>
+                        </div>
+
+                        <div>
+                            <h2>Blogs</h2>
+                            {`${user.username} logged in`} <button onClick={handleLogOut}>Log you out</button>
+                            <br></br>
+                        </div>
+                        <Notification message={notification} />
+
+                        <Switch>
+                            <Route path="/users/:id">
+                                <User users={users} />
+                            </Route>
+                            <Route path="/users">
+                                <Users />
+                            </Route>
+                            <Route path="/">
+                                <div>
+                                    <div>
+                                        <h2>Create new blog</h2>
+                                        {blogForm()}
+                                        <br></br>
+                                        {blogs.map(blog =>
+                                            <Blog
+                                                key={blog.id}
+                                                blog={blog}
+                                                user={user}
+                                                removePost={removePost}
+                                                increaseLikes={increaseLikes} />
+                                        )}
+                                    </div>
+                                </div>
+                            </Route>
+                        </Switch>
+                    </div>
+                }
+            </div>
+
+        </Router>
     )
 }
 

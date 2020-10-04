@@ -34,6 +34,8 @@ const BlogTogglable = (props) => {
 }
 
 const Blog = ({ blog, user, removePost, increaseLikes }) => {
+    console.log(user, blog)
+    console.log(blog.user)
 
     return (
         <div className='blogStyle'>
@@ -45,7 +47,7 @@ const Blog = ({ blog, user, removePost, increaseLikes }) => {
                     <br />
                     Author: {blog.author}
                     <br />
-                    {user && user.username === blog.user.username ?
+                    {user && (user.username === blog.user.username || blog.user === 'NewlyCreatedBlog')  ?
                         <button onClick={removePost} data-id={blog.id}>Remove</button> : <div></div>}
                 </div>
             </BlogTogglable>

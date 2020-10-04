@@ -1,5 +1,6 @@
 import blogService from '../services/blogs'
 import { setNotification } from './notificationReducer'
+import { initializeUsers } from './blogUsersReducer'
 
 const blogReducer = (state = [], action) => {
     switch (action.type) {
@@ -24,9 +25,11 @@ export const createBlog = (content) => {
         dispatch({
             type: 'NEW_BLOG',
             data: {
-                ...newBlog
+                ...newBlog,
+                user: 'NewlyCreatedBlog'
             }
         })
+        dispatch(initializeUsers())
     }
 }
 

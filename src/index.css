@@ -35,7 +35,7 @@ body {
   }
 
   p {
-      color: red;
+      color: black;
   }
 
 .blogStyle {
@@ -44,3 +44,14 @@ body {
   border: 2px solid grey;
   margin-bottom: 5px;
 }
+
+.userGridParent {
+  display: grid;
+  grid-template-columns: auto
+}
+
+.userGridItem {
+  display: grid;
+  grid-template-columns: 100px auto
+}
+
