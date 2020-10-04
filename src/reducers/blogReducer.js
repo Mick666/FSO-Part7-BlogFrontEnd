@@ -4,8 +4,9 @@ import { initializeUsers } from './blogUsersReducer'
 
 const blogReducer = (state = [], action) => {
     switch (action.type) {
-    case 'ADD_LIKE':
-        return state.map((blog, i) => i === state.indexOf(action.data) ? action.data : blog)
+    case 'UPDATE_BLOG':
+        const id = action.data.id
+        return state.map(blog => blog.id !== id ? blog : action.data)
     case 'NEW_BLOG':
         return [ ...state, action.data]
     case 'INIT_BLOGS':
@@ -36,6 +37,7 @@ export const createBlog = (content) => {
 export const initializeBlogs = () => {
     return async dispatch => {
         const blogs = await blogService.getAll()
+        console.log(blogs)
         dispatch({
             type: 'INIT_BLOGS',
             data: blogs
@@ -44,12 +46,21 @@ export const initializeBlogs = () => {
 }
 
 export const addLike = (content) => {
-    console.log(content)
     return async dispatch => {
         const updatedBlog = await blogService.increaseLikes(content)
-        console.log(updatedBlog)
         dispatch({
-            type: 'ADD_LIKE',
+            type: 'UPDATE_BLOG',
+            data: updatedBlog
+        })
+    }
+}
+
+
+export const addComment = (blog) => {
+    return async dispatch => {
+        const updatedBlog = await blogService.addComment(blog)
+        dispatch({
+            type: 'UPDATE_BLOG',
             data: updatedBlog
         })
     }
@@ -69,5 +80,6 @@ export const removeBlog = (blogId) => {
         })
     }
 }
+
 
 export default blogReducer

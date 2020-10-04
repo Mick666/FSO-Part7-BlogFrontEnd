@@ -1,8 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useParams, useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { addLike, removeBlog } from '../reducers/blogReducer'
-
+import { addComment, addLike, removeBlog } from '../reducers/blogReducer'
 
 const BlogHeader = ({ title, author, id }) => {
     return (
@@ -19,6 +18,7 @@ const Blog = ({ blogs, user }) => {
     const history = useHistory()
     const blogId = useParams().id
     const blog = blogs.find(n => n.id.toString() === blogId.toString())
+    const [comment, setComment] = useState('')
 
     if (!blog) return null
 
@@ -26,6 +26,7 @@ const Blog = ({ blogs, user }) => {
     const increaseLikes = (blog) => {
         let updatedBlog = blog
         updatedBlog.likes = +updatedBlog.likes + 1
+        updatedBlog.user = updatedBlog.user.id ? updatedBlog.user.id : updatedBlog.user
         dispatch(addLike(updatedBlog))
     }
 
@@ -35,6 +36,16 @@ const Blog = ({ blogs, user }) => {
         history.push('/')
     }
 
+    const addBlogComment = (event, blog, comment) => {
+        event.preventDefault()
+        const updatedBlog = {
+            ...blog,
+            comments: blog.comments.concat(comment),
+            user: blog.user && blog.user.id ? blog.user.id : blog.user
+        }
+        dispatch(addComment(updatedBlog, comment))
+        setComment('')
+    }
 
     return (
         <div>
@@ -46,8 +57,22 @@ const Blog = ({ blogs, user }) => {
                 <br />
                     Author: {blog.author}
                 <br />
-                {user && (user.username === blog.user.username || blog.user === 'NewlyCreatedBlog') ?
+                {user && (user.username === blog.user.username) ?
                     <button onClick={removePost} data-id={blog.id}>Remove</button> : <div></div>}
+                <h3>Comments</h3>
+                <ul>
+                    {blog.comments.map((comment, index) =>
+                        <li key={index}>{comment}</li>
+                    )}
+                </ul>
+                <form onSubmit={(event) => addBlogComment(event, blog, comment)}>
+                    Add a comment:
+                    <input
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                    />
+                    <button type="submit">Post</button>
+                </form>
             </div>
         </div>
     )

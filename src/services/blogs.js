@@ -26,8 +26,20 @@ const increaseLikes = async (updatedBlog) => {
     const config = {
         headers: { Authorization: token },
     }
+    console.log(updatedBlog)
 
     const response = await axios.put(`${baseUrl}/${updatedBlog.id}`, updatedBlog, config)
+    console.log(response.data)
+    return response.data
+}
+
+const addComment = async (updatedBlog) => {
+    const config = {
+        headers: { Authorization: token },
+    }
+
+    const response = await axios.put(`${baseUrl}/${updatedBlog.id}`, updatedBlog, config)
+    console.log(response)
     return response.data
 }
 
@@ -40,4 +52,4 @@ const deletePost = async (id) => {
     return response.data
 }
 
-export default { getAll, setToken, create, increaseLikes, deletePost }
+export default { getAll, setToken, create, increaseLikes, deletePost, addComment }
