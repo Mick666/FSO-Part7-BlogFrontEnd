@@ -1,18 +1,18 @@
 import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import Container from '@material-ui/core/Container'
 import {
     BrowserRouter as Router,
-    Switch, Route, Link
+    Switch, Route
 } from 'react-router-dom'
 import { Blog, Blogs } from './components/Blog'
 import Notification from './components/Notification'
 import { User, Users } from './components/Users'
+import LoginForm from './components/LoginForm'
+import NavigationBar from './components/NavBar'
 import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUsers } from './reducers/blogUsersReducer'
-import { logout, setLogin } from './reducers/userReducer'
-import LoginForm from './components/LoginForm'
-import { useDispatch, useSelector } from 'react-redux'
-import { Button } from '@material-ui/core'
+import { setLogin } from './reducers/userReducer'
 
 const App = () => {
     const dispatch = useDispatch()
@@ -30,10 +30,6 @@ const App = () => {
         }
     }, [dispatch])
 
-    const handleLogOut = () => {
-        dispatch(logout())
-    }
-
     useEffect(() => {
         dispatch(initializeBlogs())
         dispatch(initializeUsers())
@@ -46,24 +42,12 @@ const App = () => {
                     {user === null ?
                         <div>
                             <h2>Please log in</h2>
+                            <Notification message={notification} />
                             <LoginForm />
                         </div> :
                         <div>
-                            <div>
-                                <Link to='/'>Home</Link>
-                                <Link to='/users'>Users</Link>
-                                {`${user.username} logged in`} 
-                                <Button variant="contained" onClick={handleLogOut}>
-                                Log you out
-                                </Button>
-                            </div>
-
-                            <div>
-                                <h2>Blogs</h2>
-                                <br></br>
-                            </div>
+                            <NavigationBar />
                             <Notification message={notification} />
-
                             <Switch>
                                 <Route path="/users/:id">
                                     <User users={users} />

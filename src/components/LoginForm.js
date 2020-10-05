@@ -11,7 +11,6 @@ const LoginForm = () => {
 
     const onSubmit = (event) => {
         event.preventDefault()
-        console.log(username, password)
         dispatch(loginUser(username, password))
         setUsername('')
         setPassword('')

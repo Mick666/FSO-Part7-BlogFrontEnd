@@ -7,7 +7,7 @@ const Notification = () => {
 
     if (notification === null) return null
     return (
-        <Alert severity="success">
+        <Alert severity={notification.style}>
             {notification.content}
         </Alert>
     )
