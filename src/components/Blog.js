@@ -2,13 +2,50 @@ import React, { useState } from 'react'
 import { Link, useParams, useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { addComment, addLike, removeBlog } from '../reducers/blogReducer'
+import BlogForm from './BlogForm'
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableRow,
+    Paper,
+} from '@material-ui/core'
+
 
 const BlogHeader = ({ title, author, id }) => {
     return (
-        <div  className='blogStyle'>
+        <div>
             <Link to={`/blogs/${id}`}>
                 {title} by {author}
             </Link>
+        </div>
+    )
+}
+
+const Blogs = ({ blogs }) => {
+    return (
+        <div>
+            <h2>Create new blog</h2>
+            <BlogForm />
+            <br></br>
+            <TableContainer component={Paper}>
+                <Table>
+                    <TableBody>
+                        {blogs.map(blog =>
+                            <TableRow key={blog.id}>
+                                <TableCell>
+                                    <BlogHeader
+                                        title={blog.title}
+                                        author={blog.author}
+                                        id={blog.id}
+                                    />
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
         </div>
     )
 }
@@ -78,4 +115,4 @@ const Blog = ({ blogs, user }) => {
     )
 }
 
-export { Blog, BlogHeader }
+export { Blog, Blogs }

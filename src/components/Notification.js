@@ -1,20 +1,15 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { Alert } from '@material-ui/lab'
 
 const Notification = () => {
     const notification = useSelector(state => state.notification)
 
     if (notification === null) return null
-    const style = {
-        border: 'solid',
-        padding: 10,
-        borderWidth: 1,
-        borderColor: notification.style
-    }
     return (
-        <div style={style}>
+        <Alert severity="success">
             {notification.content}
-        </div>
+        </Alert>
     )
 }
 

@@ -22,7 +22,7 @@ export const createBlog = (content) => {
     return async dispatch => {
         const newBlog = await blogService.create(content)
         const notificationMessage = `New blog ${content.title} by ${content.author} added`
-        dispatch(setNotification(notificationMessage, 'green', 5))
+        dispatch(setNotification(notificationMessage, 'success', 5))
         dispatch({
             type: 'NEW_BLOG',
             data: {

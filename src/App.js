@@ -1,17 +1,18 @@
 import React, { useEffect } from 'react'
+import Container from '@material-ui/core/Container'
 import {
     BrowserRouter as Router,
     Switch, Route, Link
 } from 'react-router-dom'
-import { Blog, BlogHeader } from './components/Blog'
+import { Blog, Blogs } from './components/Blog'
 import Notification from './components/Notification'
 import { User, Users } from './components/Users'
 import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUsers } from './reducers/blogUsersReducer'
 import { logout, setLogin } from './reducers/userReducer'
 import LoginForm from './components/LoginForm'
-import BlogForm from './components/BlogForm'
 import { useDispatch, useSelector } from 'react-redux'
+import { Button } from '@material-ui/core'
 
 const App = () => {
     const dispatch = useDispatch()
@@ -39,59 +40,50 @@ const App = () => {
     }, [dispatch])
 
     return (
-        <Router>
-            <div>
-                {user === null ?
-                    <div>
-                        <h2>Please log in</h2>
-                        <LoginForm />
-                    </div> :
-                    <div>
+        <Container>
+            <Router>
+                <div>
+                    {user === null ?
                         <div>
-                            <Link to='/'>Home</Link>
-                            <Link to='/users'>Users</Link>
-                            {`${user.username} logged in`} <button onClick={handleLogOut}>Log you out</button>
-                        </div>
-
+                            <h2>Please log in</h2>
+                            <LoginForm />
+                        </div> :
                         <div>
-                            <h2>Blogs</h2>
-                            <br></br>
+                            <div>
+                                <Link to='/'>Home</Link>
+                                <Link to='/users'>Users</Link>
+                                {`${user.username} logged in`} 
+                                <Button variant="contained" onClick={handleLogOut}>
+                                Log you out
+                                </Button>
+                            </div>
+
+                            <div>
+                                <h2>Blogs</h2>
+                                <br></br>
+                            </div>
+                            <Notification message={notification} />
+
+                            <Switch>
+                                <Route path="/users/:id">
+                                    <User users={users} />
+                                </Route>
+                                <Route path="/blogs/:id">
+                                    <Blog blogs={blogs} user={user} />
+                                </Route>
+                                <Route path="/users">
+                                    <Users />
+                                </Route>
+                                <Route path="/">
+                                    <Blogs blogs={blogs} />
+                                </Route>
+                            </Switch>
                         </div>
-                        <Notification message={notification} />
+                    }
+                </div>
 
-                        <Switch>
-                            <Route path="/users/:id">
-                                <User users={users} />
-                            </Route>
-                            <Route path="/blogs/:id">
-                                <Blog blogs={blogs} user={user} />
-                            </Route>
-                            <Route path="/users">
-                                <Users />
-                            </Route>
-                            <Route path="/">
-                                <div>
-                                    <div>
-                                        <h2>Create new blog</h2>
-                                        <BlogForm />
-                                        <br></br>
-                                        {blogs.map(blog =>
-                                            <BlogHeader
-                                                key={blog.id}
-                                                title={blog.title}
-                                                author={blog.author}
-                                                id={blog.id}
-                                            />
-                                        )}
-                                    </div>
-                                </div>
-                            </Route>
-                        </Switch>
-                    </div>
-                }
-            </div>
-
-        </Router>
+            </Router>
+        </Container>
     )
 }
 

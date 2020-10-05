@@ -23,13 +23,15 @@ export const loginUser = (username, password) => {
                 'loggedBlogappUser', JSON.stringify(loggedInUser)
             )
             blogService.setToken(loggedInUser.token)
+            const notificationMessage = `${username} successfully logged in`
+            dispatch(setNotification(notificationMessage, 'success', 5))
             dispatch({
                 type: 'LOGIN',
                 data: loggedInUser
             })
         } catch (error) {
             const notificationMessage = 'Wrong credentials'
-            dispatch(setNotification(notificationMessage, 'red', 5))
+            dispatch(setNotification(notificationMessage, 'error', 5))
         }
     }
 }
