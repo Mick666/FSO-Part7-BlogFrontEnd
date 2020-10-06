@@ -10,7 +10,27 @@ import {
     TableContainer,
     TableRow,
     Paper,
+    TextField,
+    Button,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    Divider
 } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import FavoriteIcon from '@material-ui/icons/Favorite'
+
+const useStyles = makeStyles({
+    inputField: {
+        marginLeft: '10px',
+    },
+    inputButton: {
+        marginLeft: '10px',
+        position: 'relative',
+        top: '17px'
+    },
+})
 
 
 const BlogHeader = ({ title, author, id }) => {
@@ -56,6 +76,7 @@ const Blog = ({ blogs, user }) => {
     const blogId = useParams().id
     const blog = blogs.find(n => n.id.toString() === blogId.toString())
     const [comment, setComment] = useState('')
+    const classes = useStyles()
 
     if (!blog) return null
 
@@ -88,14 +109,36 @@ const Blog = ({ blogs, user }) => {
         <div>
             <div>
                 <h2>{blog.title}</h2>
-                    Url: {blog.url}
-                <br />
-                    Likes: {blog.likes}  <button onClick={() => increaseLikes(blog)}>Like</button>
-                <br />
-                    Author: {blog.author}
-                <br />
-                {user && (user.username === blog.user.username) ?
-                    <button onClick={removePost} data-id={blog.id}>Remove</button> : <div></div>}
+                <List component="nav">
+                    <ListItem>
+                        <ListItemText primary={`Url: ${blog.url}`} />
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText primary={`Likes: ${blog.likes}`} />
+                        <ListItemIcon>
+                            <FavoriteIcon onClick={() => increaseLikes(blog)} />
+                        </ListItemIcon>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText primary={`Author: ${blog.author}`} />
+                    </ListItem>
+                    {user && (user.username === blog.user.username) ?
+                        <ListItem>
+                            <ListItemIcon>
+                                <Button
+                                    size="small"
+                                    variant="contained"
+                                    color="primary"
+                                    type="submit"
+                                    onClick={removePost}
+                                    data-id={blog.id}
+                                >
+                                    Remove
+                                </Button>
+                            </ListItemIcon>
+                        </ListItem> : <div></div>}
+                </List>
+
                 <h3>Comments</h3>
                 <ul>
                     {blog.comments.map((comment, index) =>
@@ -103,12 +146,17 @@ const Blog = ({ blogs, user }) => {
                     )}
                 </ul>
                 <form onSubmit={(event) => addBlogComment(event, blog, comment)}>
-                    Add a comment:
-                    <input
-                        value={comment}
-                        onChange={(e) => setComment(e.target.value)}
+                    <TextField label="comment" value={comment} className={classes.inputField}
+                        onChange={({ target }) => setComment(target.value)}
                     />
-                    <button type="submit">Post</button>
+                    <Button
+                        size="small"
+                        variant="contained"
+                        color="primary"
+                        type="submit"
+                        className={classes.inputButton}>
+                        Post
+                    </Button>
                 </form>
             </div>
         </div>
