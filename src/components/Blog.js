@@ -15,8 +15,7 @@ import {
     List,
     ListItem,
     ListItemIcon,
-    ListItemText,
-    Divider
+    ListItemText
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import FavoriteIcon from '@material-ui/icons/Favorite'
@@ -89,8 +88,8 @@ const Blog = ({ blogs, user }) => {
     }
 
 
-    const removePost = (event) => {
-        dispatch(removeBlog(event.target.dataset.id))
+    const removePost = (id) => {
+        dispatch(removeBlog(id))
         history.push('/')
     }
 
@@ -130,7 +129,7 @@ const Blog = ({ blogs, user }) => {
                                     variant="contained"
                                     color="primary"
                                     type="submit"
-                                    onClick={removePost}
+                                    onClick={() => removePost(blog.id)}
                                     data-id={blog.id}
                                 >
                                     Remove

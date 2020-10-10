@@ -43,6 +43,7 @@ export const setLogin = (user) => {
             return
         } else {
             blogService.setToken(user.token)
+            console.log(user)
             dispatch({
                 type: 'LOGIN',
                 data: user

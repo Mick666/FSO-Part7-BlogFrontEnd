@@ -8,6 +8,7 @@ import { Button, AppBar, Toolbar, Typography } from '@material-ui/core'
 const NavigationBar = () => {
     const dispatch = useDispatch()
     const user = useSelector(state => state.user)
+    console.log(user)
 
     const handleLogOut = () => {
         dispatch(logout())

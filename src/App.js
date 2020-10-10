@@ -12,7 +12,7 @@ import LoginForm from './components/LoginForm'
 import NavigationBar from './components/NavBar'
 import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUsers } from './reducers/blogUsersReducer'
-import { setLogin } from './reducers/userReducer'
+import { setLogin, logout } from './reducers/userReducer'
 
 const App = () => {
     const dispatch = useDispatch()
@@ -25,7 +25,10 @@ const App = () => {
         let loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
         if (loggedUserJSON) {
             const userParsed = JSON.parse(loggedUserJSON)
-            if (user === null) return
+            if (user === null || userParsed === null) {
+                dispatch(logout())
+                return
+            }
             dispatch(setLogin(userParsed))
         }
     }, [dispatch])

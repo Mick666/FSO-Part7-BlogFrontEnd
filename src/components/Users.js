@@ -1,6 +1,14 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableRow,
+    Paper
+} from '@material-ui/core'
 
 const User = ({ users }) => {
     const userId = useParams().id
@@ -33,17 +41,26 @@ const Users = () => {
     return (
         <div className='userGridParent'>
             <span className='userGridItem'>
-                <b>Users</b>
+                <h3>Users</h3>
+                <br />
                 <b>Blogs created:</b>
             </span>
-            {users.map((user, index) =>
-                <div className='userGridItem' key={index}>
-                    <Link to={`/users/${user.id}`}>
-                        <p>{user.username}</p>
-                    </Link>
-                    <p>{user.blogs.length}</p>
-                </div>
-            )}
+            <TableContainer component={Paper}>
+                <Table>
+                    <TableBody>
+                        {users.map((user, index) =>
+                            <TableRow key={index}>
+                                <TableCell>
+                                    {user.username}
+                                </TableCell>
+                                <TableCell>
+                                    {user.blogs.length}
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
         </div>
     )
 }

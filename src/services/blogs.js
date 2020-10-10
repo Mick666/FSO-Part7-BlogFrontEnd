@@ -9,7 +9,6 @@ const setToken = newToken => {
 
 const getAll = async () => {
     const request = await axios.get(baseUrl)
-    console.log(request.data)
     return request.data.sort((a, b) => b.likes - a.likes)
 }
 
@@ -26,10 +25,8 @@ const increaseLikes = async (updatedBlog) => {
     const config = {
         headers: { Authorization: token },
     }
-    console.log(updatedBlog)
 
     const response = await axios.put(`${baseUrl}/${updatedBlog.id}`, updatedBlog, config)
-    console.log(response.data)
     return response.data
 }
 
@@ -39,7 +36,6 @@ const addComment = async (updatedBlog) => {
     }
 
     const response = await axios.put(`${baseUrl}/${updatedBlog.id}`, updatedBlog, config)
-    console.log(response)
     return response.data
 }
 
