@@ -23,13 +23,17 @@ const App = () => {
 
     useEffect(() => {
         let loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+        console.log(loggedUserJSON)
         if (loggedUserJSON) {
             const userParsed = JSON.parse(loggedUserJSON)
             if (user === null || userParsed === null) {
+                console.log('didnt log in')
                 dispatch(logout())
                 return
             }
             dispatch(setLogin(userParsed))
+        } else {
+            dispatch(logout())
         }
     }, [dispatch])
 
